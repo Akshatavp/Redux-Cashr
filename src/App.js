@@ -1,5 +1,5 @@
 import "./App.css";
-import { Modal } from "react-bootstrap";
+
 import { FaCashRegister } from "react-icons/fa6";
 import { MdOutlineInventory } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
@@ -14,7 +14,7 @@ function App() {
     <div className="App">
       <div
         style={{
-          height: "80px",
+          height: "50px",
           backgroundColor: "green",
           marginBottom: "20px",
         }}
