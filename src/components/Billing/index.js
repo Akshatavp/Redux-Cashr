@@ -11,9 +11,7 @@ const Billing = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sales, setSales] = useState([]);
 
-  console.log(selectedProducts);
-  console.log(addcost);
-  console.log(sales);
+  console.log(products);
 
   const handleAddProduct = (product) => {
     const productIndex = selectedProducts.findIndex(
@@ -54,6 +52,27 @@ const Billing = () => {
     );
     const totalWithGST = totalAmount + addcost + (totalAmount * 5) / 100;
 
+    // Consolidate selected products into a map
+    const selectedProductsMap = selectedProducts.reduce((map, product) => {
+      map[product.name] = (map[product.name] || 0) + product.qty;
+      return map;
+    }, {});
+
+    // Deduct quantity from products
+    const updatedProducts = products.map((product) => {
+      const selectedQty = selectedProductsMap[product.name] || 0;
+      console.log("Product:", product.name);
+      console.log("Selected Quantity:", selectedQty);
+      return {
+        ...product,
+        qty: product.qty - selectedQty,
+      };
+    });
+
+    console.log("Updated Products:", updatedProducts);
+
+    setProducts(updatedProducts);
+
     const sale = {
       billNumber,
       dateTime: currentDateTime,
@@ -66,6 +85,8 @@ const Billing = () => {
     setSelectedProducts([]);
     setaddcost(0);
   };
+
+  console.log(products);
 
   const handleRemoveProduct = (productName) => {
     const updatedProducts = selectedProducts.filter(

@@ -8,21 +8,7 @@ const Bill = ({ selectedProducts, addcost }) => {
 
   const gst = (total * 5) / 100;
 
-  // const generateBillNumber = () => {
-  //   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  //   const length = 10;
-  //   let billNumber = "";
-  //   for (let i = 0; i < length; i++) {
-  //     billNumber += characters.charAt(
-  //       Math.floor(Math.random() * characters.length)
-  //     );
-  //   }
-  //   return billNumber;
-  // };
-
-  // // Format current date and time
   const currentDate = new Date().toLocaleDateString();
-  const currentTime = new Date().toLocaleTimeString();
 
   return (
     <div
