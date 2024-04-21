@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import { Formik } from "formik";
+import { useState, useMemo } from "react";
+import { Button } from "react-bootstrap";
+import AddProductModal from "./AddModal";
+import ModalComponent from "./EditModal";
+import data from "../../dummy";
 
 const Inventory = () => {
   const [edit, setEdit] = useState({
@@ -9,6 +11,7 @@ const Inventory = () => {
   });
 
   const [addModal, setAddModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleClose = () => setEdit({ ...edit, status: false });
   const handleAddClose = () => setAddModal(false);
@@ -26,7 +29,7 @@ const Inventory = () => {
 
   const saveProductChange = (values) => {
     const updatedProducts = [...products];
-    updatedProducts[edit.index] = { ...values };
+    updatedProducts[filteredProducts[edit.index].originalIndex] = { ...values };
     setProducts(updatedProducts);
     handleClose();
   };
@@ -37,220 +40,109 @@ const Inventory = () => {
   };
 
   const handleDelete = (index) => {
+    const originalIndex = filteredProducts[index].originalIndex;
     const updatedProducts = [...products];
-    updatedProducts.splice(index, 1); // Remove product at index
+    updatedProducts.splice(originalIndex, 1);
     setProducts(updatedProducts);
+    handleClose();
   };
 
-  const [products, setProducts] = useState([
-    {
-      name: "Milk",
-      qty: 65,
-      price: 1200,
-      category: "daily",
-      barcode: "675GBR",
-    },
-    // additional products...
-  ]);
+  const [products, setProducts] = useState(data);
 
-  const ModalComponent = () => {
-    const product = products[edit.index];
-
-    return (
-      <Modal show={edit.status} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Product</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Formik
-            initialValues={product}
-            onSubmit={(values) => saveProductChange(values)}
-          >
-            {({ values, handleChange, handleSubmit }) => (
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formName">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formQty">
-                  <Form.Label>Quantity</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="qty"
-                    value={values.qty}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formPrice">
-                  <Form.Label>Price</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="price"
-                    value={values.price}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="category"
-                    value={values.category}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBarcode">
-                  <Form.Label>Barcode</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="barcode"
-                    value={values.barcode}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" type="submit">
-                  Save changes
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal>
-    );
-  };
-
-  const AddProductModal = () => {
-    return (
-      <Modal show={addModal} onHide={handleAddClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Product</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Formik
-            initialValues={{
-              name: "",
-              qty: "",
-              price: "",
-              category: "",
-              barcode: "",
-            }}
-            onSubmit={(values) => handleAddProduct(values)}
-          >
-            {({ values, handleChange, handleSubmit }) => (
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formName">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formQty">
-                  <Form.Label>Quantity</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="qty"
-                    value={values.qty}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formPrice">
-                  <Form.Label>Price</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="price"
-                    value={values.price}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formCategory">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="category"
-                    value={values.category}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBarcode">
-                  <Form.Label>Barcode</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="barcode"
-                    value={values.barcode}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Button variant="secondary" onClick={handleAddClose}>
-                  Close
-                </Button>
-                <Button variant="primary" type="submit">
-                  Add Product
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal>
-    );
-  };
+  const filteredProducts = useMemo(() => {
+    return products
+      .map((product, index) => ({
+        ...product,
+        originalIndex: index,
+      }))
+      .filter((product) => {
+        return (
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.category.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      });
+  }, [products, searchQuery]);
 
   return (
     <>
-      <ModalComponent />
-      <AddProductModal />
+      <ModalComponent
+        edit={edit}
+        handleClose={handleClose}
+        filteredProducts={filteredProducts}
+        saveProductChange={saveProductChange}
+      />
+      <AddProductModal
+        addModal={addModal}
+        handleAddClose={handleAddClose}
+        handleAddProduct={handleAddProduct}
+      />
       <div className="mb-3">
         <Button variant="primary" onClick={handleAddOpenModal}>
           Add Product
         </Button>
       </div>
-      <table className="table table-striped in-table">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Price</th>
-            <th scope="col">Category</th>
-            <th scope="col">Barcode</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => (
-            <tr key={index}>
-              <td>{product.name}</td>
-              <td>{product.qty}</td>
-              <td>{product.price}</td>
-              <td>{product.category}</td>
-              <td>{product.barcode}</td>
-              <td>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleOpenModal(index)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(index)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="container">
+        <div className="mb-3 row">
+          <input
+            type="text"
+            style={{
+              padding: "10px",
+              borderRadius: "13px",
+              border: "1px solid black",
+            }}
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div style={{ maxHeight: "60vh", overflowY: "auto" }} className="row">
+          <table className="table table-striped in-table">
+            <thead>
+              <tr
+                style={{
+                  position: "sticky",
+                  top: 0,
+                }}
+              >
+                <th scope="col">Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Category</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProducts.map((product, index) => (
+                <tr key={product.originalIndex}>
+                  <td>{product.name}</td>
+                  <td>{product.qty}</td>
+                  <td>{product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.barcode}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleOpenModal(index)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger "
+                      style={{
+                        marginLeft: "10px",
+                      }}
+                      onClick={() => handleDelete(index)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
   );
 };
