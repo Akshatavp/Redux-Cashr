@@ -1,4 +1,27 @@
-const AdditionalCost = () => {
+import React, { useState } from "react";
+
+const AdditionalCost = ({ addcost, setaddcost }) => {
+  const [additionalCostInput, setAdditionalCostInput] = useState("");
+
+  const handleNumberButtonClick = (number) => {
+    // Concatenate the clicked number to the existing input
+    setAdditionalCostInput((prevInput) => prevInput + number);
+  };
+
+  const handleClearButtonClick = () => {
+    // Clear the input
+    setAdditionalCostInput("");
+  };
+
+  const handleEnterButtonClick = () => {
+    // Convert the input to a number and update addCost state
+    const cost = parseFloat(additionalCostInput);
+    if (!isNaN(cost)) {
+      setaddcost(cost);
+      // setAdditionalCostInput(""); // Clear the input after updating addCost
+    }
+  };
+
   return (
     <div
       className="row"
@@ -20,112 +43,33 @@ const AdditionalCost = () => {
             marginBottom: "10px",
           }}
           placeholder="Additional Cost"
+          value={additionalCostInput}
+          readOnly
         />
       </div>
       <div className="row mb-2">
-        <label className="mb-2 text-center">Additonal cost</label>
-        <div className="col ">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            1
-          </button>
-        </div>
-        <div className="col">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            2
-          </button>
-        </div>
-        <div className="col">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            3
-          </button>
-        </div>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
+          <div key={number} className="col-4 mb-3">
+            <button
+              style={{
+                width: "100%",
+              }}
+              className="btn btn-primary"
+              onClick={() => handleNumberButtonClick(number)}
+            >
+              {number}
+            </button>
+          </div>
+        ))}
       </div>
       <div className="row mb-2">
-        <div className="col ">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            4
-          </button>
-        </div>
         <div className="col">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            5
-          </button>
-        </div>
-        <div className="col">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            6
-          </button>
-        </div>
-      </div>
-      <div className="row mb-2">
-        <div className="col ">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            7
-          </button>
-        </div>
-        <div className="col">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            8
-          </button>
-        </div>
-        <div className="col">
-          <button
-            style={{
-              width: "100%",
-            }}
-            className="btn btn-primary"
-          >
-            9
-          </button>
-        </div>
-      </div>
-      <div className="row mb-2">
-        <div className="col ">
           <button
             style={{
               width: "100%",
             }}
             className="btn btn-danger"
+            onClick={handleClearButtonClick}
           >
             Clear
           </button>
@@ -136,6 +80,7 @@ const AdditionalCost = () => {
               width: "100%",
             }}
             className="btn btn-primary"
+            onClick={() => handleNumberButtonClick(0)}
           >
             0
           </button>
@@ -146,6 +91,7 @@ const AdditionalCost = () => {
               width: "100%",
             }}
             className="btn btn-danger"
+            onClick={handleEnterButtonClick}
           >
             Enter
           </button>

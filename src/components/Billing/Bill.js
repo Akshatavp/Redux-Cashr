@@ -1,4 +1,29 @@
-const Bill = () => {
+const Bill = ({ selectedProducts, addcost }) => {
+  const totalAmount = selectedProducts.reduce(
+    (total, product) => total + product.qty * product.price,
+    0
+  );
+
+  const total = totalAmount + addcost;
+
+  const gst = (total * 5) / 100;
+
+  // const generateBillNumber = () => {
+  //   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  //   const length = 10;
+  //   let billNumber = "";
+  //   for (let i = 0; i < length; i++) {
+  //     billNumber += characters.charAt(
+  //       Math.floor(Math.random() * characters.length)
+  //     );
+  //   }
+  //   return billNumber;
+  // };
+
+  // // Format current date and time
+  const currentDate = new Date().toLocaleDateString();
+  const currentTime = new Date().toLocaleTimeString();
+
   return (
     <div
       className="row text-center"
@@ -23,16 +48,15 @@ const Bill = () => {
         <h5>CASHR</h5>
         <h6>D-Mart</h6>
         <hr></hr>
-        <p>BillNo: hsdhfshdfb434</p>
+        <p>BillNo: AUTO-GEN</p>
         <div
-          // className="row"
           style={{
             display: "flex",
             justifyContent: "space-between",
           }}
         >
-          <p>12/04/23</p>
-          <p>13:97:08</p>
+          <p>{currentDate}</p>
+          <p>--------</p>
         </div>
       </div>
 
@@ -48,12 +72,12 @@ const Bill = () => {
           <th>Price</th>
           <th>Amount</th>
         </tr>
-        {[...Array(25)].map((_, index) => (
+        {selectedProducts.map((product) => (
           <tr>
-            <td>carrot</td>
-            <td>2</td>
-            <td>25</td>
-            <td>50</td>
+            <td>{product.name}</td>
+            <td>{product.qty}</td>
+            <td>{product.price}</td>
+            <td>{product.qty * product.price}</td>
           </tr>
         ))}
       </table>
@@ -69,16 +93,16 @@ const Bill = () => {
       >
         <tr>
           <td>Add Cost</td>
-          <td>800</td>
+          <td>{addcost}</td>
         </tr>
         <tr>
           <td>GST</td>
-          <td>100</td>
+          <td>{gst}</td>
         </tr>
 
         <tr>
           <td>Total</td>
-          <td>8000</td>
+          <td>{total + gst}</td>
         </tr>
       </table>
       <hr></hr>
