@@ -2,13 +2,17 @@ import { useState, useMemo } from "react";
 import { Button } from "react-bootstrap";
 import AddProductModal from "./AddModal";
 import ModalComponent from "./EditModal";
-import data from "../../dummy";
+
+import { useDispatch, useSelector } from "react-redux";
+import { setStateProducts } from "../../slices/productSlice";
 
 const Inventory = () => {
   const [edit, setEdit] = useState({
     status: false,
     index: null,
   });
+
+  const dispatch = useDispatch();
 
   const [addModal, setAddModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,11 +35,14 @@ const Inventory = () => {
     const updatedProducts = [...products];
     updatedProducts[filteredProducts[edit.index].originalIndex] = { ...values };
     setProducts(updatedProducts);
+    dispatch(setStateProducts(updatedProducts));
     handleClose();
   };
 
   const handleAddProduct = (values) => {
+    const updatedProducts = [...products, { ...values }];
     setProducts([...products, { ...values }]);
+    dispatch(setStateProducts(updatedProducts));
     handleAddClose();
   };
 
@@ -44,10 +51,13 @@ const Inventory = () => {
     const updatedProducts = [...products];
     updatedProducts.splice(originalIndex, 1);
     setProducts(updatedProducts);
+    dispatch(setStateProducts(updatedProducts));
     handleClose();
   };
 
-  const [products, setProducts] = useState(data);
+  const stateProducts = useSelector((state) => state.products);
+
+  const [products, setProducts] = useState(stateProducts);
 
   const filteredProducts = useMemo(() => {
     return products

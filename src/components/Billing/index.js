@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import AdditionalCost from "./AdditionalCost";
 import Bill from "./Bill";
 import Suggestion from "./Suggestion";
-import data from "../../dummy";
+
+import { useDispatch, useSelector } from "react-redux";
+import { setStateSales } from "../../slices/saleSlice";
+import { setStateProducts } from "../../slices/productSlice";
 
 const Billing = () => {
-  const [products, setProducts] = useState(data);
+  const productState = useSelector((state) => state.products);
+  const saleState = useSelector((state) => state.sales);
+
+  const [products, setProducts] = useState(productState);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [addcost, setaddcost] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sales, setSales] = useState([]);
+  const [sales, setSales] = useState(saleState);
 
-  console.log(products);
+  const dispatch = useDispatch();
 
   const handleAddProduct = (product) => {
     const productIndex = selectedProducts.findIndex(
@@ -71,7 +77,8 @@ const Billing = () => {
 
     console.log("Updated Products:", updatedProducts);
 
-    setProducts(updatedProducts);
+    // setProducts(updatedProducts);
+    dispatch(setStateProducts(updatedProducts));
 
     const sale = {
       billNumber,
@@ -82,11 +89,10 @@ const Billing = () => {
     };
 
     setSales([...sales, sale]);
+    dispatch(setStateSales([...sales, sale]));
     setSelectedProducts([]);
     setaddcost(0);
   };
-
-  console.log(products);
 
   const handleRemoveProduct = (productName) => {
     const updatedProducts = selectedProducts.filter(
@@ -120,7 +126,7 @@ const Billing = () => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredProducts = products.filter((product) =>
+  const filteredProducts = productState.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

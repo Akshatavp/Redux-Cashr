@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux";
+
 const Suggestion = ({ products, handleAddProduct }) => {
+  const productState = useSelector((state) => state.products);
+
   return (
     <div
       style={{
@@ -7,7 +11,7 @@ const Suggestion = ({ products, handleAddProduct }) => {
         overflowY: "auto",
       }}
     >
-      {products.map((product) => (
+      {productState.map((product) => (
         <div className="col-2 mt-1">
           <div class="card" style={{ width: "7rem" }}>
             <img

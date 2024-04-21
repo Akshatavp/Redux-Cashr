@@ -1,9 +1,15 @@
-const Sales = () => {
-    return (
-        <>
-       <h1>Sales</h1> 
-        </>
-    )
-}
+import { useSelector } from "react-redux";
 
-export default Sales
+const Sales = () => {
+  const saleState = useSelector((state) => state.sales);
+
+  return (
+    <>
+      {saleState.map((sales) => (
+        <div>{sales.billNumber}</div>
+      ))}
+    </>
+  );
+};
+
+export default Sales;
