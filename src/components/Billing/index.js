@@ -99,6 +99,8 @@ const Billing = () => {
     // dispatch(setStateSales([...sales, sale]));
     // setSelectedProducts([]);
 
+    downloadBill(billNumber, currentDateTime);
+
     setSelectedProducts((prevSelectedProducts) => {
       const newSale = {
         billNumber,
@@ -150,6 +152,45 @@ const Billing = () => {
   const filteredProducts = productState.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const downloadBill = (billNumber, currentDateTime) => {
+    // Calculate total amount including GST
+    const totalAmount = selectedProducts.reduce(
+      (total, product) => total + product.totalPrice,
+      0
+    );
+    const gstAmount = (totalAmount * 5) / 100;
+    const totalWithGST = totalAmount + gstAmount + addcost;
+
+    // Construct the content of the bill
+    const billContent = `
+      Bill Number: ${billNumber}
+      Date & Time: ${currentDateTime}
+      Products:
+      ${selectedProducts
+        .map((product) => `${product.name}: ${product.qty} x ${product.price}`)
+        .join("\n")}
+      Additional Cost: ${addcost}
+      Total (including 5% GST): ${totalWithGST.toFixed(2)}
+    `;
+
+    // Create a Blob containing the bill content
+    const blob = new Blob([billContent], { type: "text/plain;charset=utf-8" });
+
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a link and trigger a click to initiate the download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "bill.txt";
+    document.body.appendChild(link);
+    link.click();
+
+    // Cleanup
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="container">

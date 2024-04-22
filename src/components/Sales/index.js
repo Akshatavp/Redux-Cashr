@@ -40,6 +40,8 @@ const Sales = () => {
     sale.billNumber.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  console.log(saleState);
+
   return (
     <div style={{ maxHeight: "90vh", overflowY: "auto" }}>
       <div className="mb-3 row">

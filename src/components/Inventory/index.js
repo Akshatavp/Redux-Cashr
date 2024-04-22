@@ -90,7 +90,13 @@ const Inventory = () => {
         handleAddClose={handleAddClose}
         handleAddProduct={handleAddProduct}
       />
-      <div className="mb-3">
+      <div
+        className="mb-3"
+        style={{
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
         <Button variant="primary" onClick={handleAddOpenModal}>
           Add Product
         </Button>

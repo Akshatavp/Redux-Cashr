@@ -12,19 +12,14 @@ import Billing from "./components/Billing";
 import Inventory from "./components/Inventory";
 import Sales from "./components/Sales";
 import Settings from "./components/Settings";
+import Timer from "./components/helpers/Timer";
 
 function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistedStore}>
         <div className="App">
-          <div
-            style={{
-              height: "50px",
-              backgroundColor: "green",
-              marginBottom: "20px",
-            }}
-          ></div>
+          <Timer />
 
           <div className="d-flex align-items-start">
             <div

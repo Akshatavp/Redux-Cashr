@@ -12,9 +12,9 @@ const Suggestion = ({ products, handleAddProduct }) => {
       }}
     >
       {productState.map((product) => (
-        <div className="col-2 mt-1">
+        <div className="col-2 mt-3">
           <div class="card" style={{ width: "7rem" }}>
-            <img
+            {/* <img
               style={{
                 width: "100%",
                 height: "50px",
@@ -22,7 +22,7 @@ const Suggestion = ({ products, handleAddProduct }) => {
               class="card-img-top"
               src="https://www.jiomart.com/images/product/original/590000186/carrot-orange-500-g-product-images-o590000186-p590000186-0-202207291751.jpg?im=Resize=(1000,1000)"
               alt="Card image cap"
-            />
+            /> */}
             <div class="card-body">
               <p class="card-title">{product.name}</p>
 
