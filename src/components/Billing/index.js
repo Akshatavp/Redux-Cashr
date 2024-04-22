@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdditionalCost from "./AdditionalCost";
 import Bill from "./Bill";
 import Suggestion from "./Suggestion";
@@ -16,6 +16,10 @@ const Billing = () => {
   const [addcost, setaddcost] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [sales, setSales] = useState(saleState);
+
+  useEffect(() => {
+    setProducts(productState);
+  }, [productState]);
 
   const dispatch = useDispatch();
 
@@ -58,6 +62,9 @@ const Billing = () => {
     );
     const totalWithGST = totalAmount + addcost + (totalAmount * 5) / 100;
 
+    // Format total amount to two decimal places
+    const formattedTotal = Number(totalWithGST).toFixed(2);
+
     // Consolidate selected products into a map
     const selectedProductsMap = selectedProducts.reduce((map, product) => {
       map[product.name] = (map[product.name] || 0) + product.qty;
@@ -77,20 +84,34 @@ const Billing = () => {
 
     console.log("Updated Products:", updatedProducts);
 
-    // setProducts(updatedProducts);
+    setProducts(updatedProducts);
     dispatch(setStateProducts(updatedProducts));
 
-    const sale = {
-      billNumber,
-      dateTime: currentDateTime,
-      products: selectedProducts,
-      additionalCost: addcost,
-      total: totalWithGST,
-    };
+    // const sale = {
+    //   billNumber,
+    //   dateTime: currentDateTime,
+    //   products: selectedProducts,
+    //   additionalCost: addcost,
+    //   total: formattedTotal,
+    // };
 
-    setSales([...sales, sale]);
-    dispatch(setStateSales([...sales, sale]));
-    setSelectedProducts([]);
+    // setSales([...sales, sale]);
+    // dispatch(setStateSales([...sales, sale]));
+    // setSelectedProducts([]);
+
+    setSelectedProducts((prevSelectedProducts) => {
+      const newSale = {
+        billNumber,
+        dateTime: currentDateTime,
+        products: prevSelectedProducts,
+        additionalCost: addcost,
+        total: formattedTotal,
+      };
+      setSales([...sales, newSale]);
+      dispatch(setStateSales([...sales, newSale]));
+      return [];
+    });
+
     setaddcost(0);
   };
 

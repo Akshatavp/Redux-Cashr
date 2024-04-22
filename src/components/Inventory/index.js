@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import AddProductModal from "./AddModal";
 import ModalComponent from "./EditModal";
@@ -58,6 +58,10 @@ const Inventory = () => {
   const stateProducts = useSelector((state) => state.products);
 
   const [products, setProducts] = useState(stateProducts);
+
+  useEffect(() => {
+    setProducts(stateProducts);
+  }, [stateProducts]);
 
   const filteredProducts = useMemo(() => {
     return products
