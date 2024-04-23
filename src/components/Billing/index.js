@@ -62,16 +62,13 @@ const Billing = () => {
     );
     const totalWithGST = totalAmount + addcost + (totalAmount * 5) / 100;
 
-    // Format total amount to two decimal places
     const formattedTotal = Number(totalWithGST).toFixed(2);
 
-    // Consolidate selected products into a map
     const selectedProductsMap = selectedProducts.reduce((map, product) => {
       map[product.name] = (map[product.name] || 0) + product.qty;
       return map;
     }, {});
 
-    // Deduct quantity from products
     const updatedProducts = products.map((product) => {
       const selectedQty = selectedProductsMap[product.name] || 0;
       console.log("Product:", product.name);
@@ -86,18 +83,6 @@ const Billing = () => {
 
     setProducts(updatedProducts);
     dispatch(setStateProducts(updatedProducts));
-
-    // const sale = {
-    //   billNumber,
-    //   dateTime: currentDateTime,
-    //   products: selectedProducts,
-    //   additionalCost: addcost,
-    //   total: formattedTotal,
-    // };
-
-    // setSales([...sales, sale]);
-    // dispatch(setStateSales([...sales, sale]));
-    // setSelectedProducts([]);
 
     downloadBill(billNumber, currentDateTime);
 
@@ -154,15 +139,14 @@ const Billing = () => {
   );
 
   const downloadBill = (billNumber, currentDateTime) => {
-    // Calculate total amount including GST
     const totalAmount = selectedProducts.reduce(
       (total, product) => total + product.totalPrice,
       0
     );
     const gstAmount = (totalAmount * 5) / 100;
-    const totalWithGST = totalAmount + gstAmount + addcost;
+    const totalWithGST = (totalAmount + gstAmount + addcost).toFixed(2);
+    const totalWithGSTFloat = parseFloat(totalWithGST);
 
-    // Construct the content of the bill
     const billContent = `
       Bill Number: ${billNumber}
       Date & Time: ${currentDateTime}
@@ -171,23 +155,19 @@ const Billing = () => {
         .map((product) => `${product.name}: ${product.qty} x ${product.price}`)
         .join("\n")}
       Additional Cost: ${addcost}
-      Total (including 5% GST): ${totalWithGST.toFixed(2)}
+      Total (including 5% GST): ${totalWithGSTFloat}
     `;
 
-    // Create a Blob containing the bill content
     const blob = new Blob([billContent], { type: "text/plain;charset=utf-8" });
 
-    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
 
-    // Create a link and trigger a click to initiate the download
     const link = document.createElement("a");
     link.href = url;
     link.download = "bill.txt";
     document.body.appendChild(link);
     link.click();
 
-    // Cleanup
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };

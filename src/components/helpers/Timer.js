@@ -19,16 +19,20 @@ const Timer = () => {
     <div
       style={{
         height: "50px",
-        backgroundColor: "green",
+        backgroundColor: "#6279FF",
         marginBottom: "20px",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-around",
         color: "white",
         fontSize: "20px",
       }}
     >
-      {currentTime.toLocaleTimeString()}
+      <div>{/* <h3>POS</h3> */}</div>
+      <div>
+        <h3>CASHR</h3>
+      </div>
+      <div> {currentTime.toLocaleTimeString()}</div>
     </div>
   );
 };

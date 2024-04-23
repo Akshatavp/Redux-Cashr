@@ -4,21 +4,17 @@ const AdditionalCost = ({ addcost, setaddcost }) => {
   const [additionalCostInput, setAdditionalCostInput] = useState("");
 
   const handleNumberButtonClick = (number) => {
-    // Concatenate the clicked number to the existing input
     setAdditionalCostInput((prevInput) => prevInput + number);
   };
 
   const handleClearButtonClick = () => {
-    // Clear the input
     setAdditionalCostInput("");
   };
 
   const handleEnterButtonClick = () => {
-    // Convert the input to a number and update addCost state
     const cost = parseFloat(additionalCostInput);
     if (!isNaN(cost)) {
       setaddcost(cost);
-      // setAdditionalCostInput(""); // Clear the input after updating addCost
     }
   };
 

@@ -7,11 +7,9 @@ import { store, persistedStore } from "./store";
 import { FaCashRegister } from "react-icons/fa6";
 import { MdOutlineInventory } from "react-icons/md";
 import { AiOutlineStock } from "react-icons/ai";
-import { IoSettingsSharp } from "react-icons/io5";
 import Billing from "./components/Billing";
 import Inventory from "./components/Inventory";
 import Sales from "./components/Sales";
-import Settings from "./components/Settings";
 import Timer from "./components/helpers/Timer";
 
 function App() {
@@ -88,7 +86,7 @@ function App() {
                   </div>
                 </div>
               </button>
-              <button
+              {/* <button
                 className="nav-link "
                 style={{
                   border: "1px solid black",
@@ -107,7 +105,7 @@ function App() {
                     <span>SETTINGS</span>{" "}
                   </div>
                 </div>
-              </button>
+              </button> */}
             </div>
             <div className="tab-content" id="v-pills-tabContent">
               <div
@@ -134,14 +132,14 @@ function App() {
               >
                 <Sales />
               </div>
-              <div
+              {/* <div
                 className="tab-pane fade"
                 id="v-pills-settings"
                 role="tabpanel"
                 aria-labelledby="v-pills-settings-tab"
               >
                 <Settings />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
